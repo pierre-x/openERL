@@ -55,3 +55,7 @@ I (597) ERL_MAIN: fw=turtle-25
 I (777) ERL_MAIN: hw=LACROIX-ERL-DLE-A01
 I (777) ERL_MAIN: uid=bf6cd136-2a71-4bff-9a04-0530da3bd84d
 ```
+
+
+La ligne ```flash_encrypt: Flash encryption mode is RELEASE``` n'est pas de bonne augure pour nous:
+Release Mode - recommended for manufacturing and production. In this mode, flashing plaintext firmware to the device without knowing the encryption key is no longer possible.
