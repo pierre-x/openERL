@@ -20,3 +20,8 @@ The continuation of this Readme is in French, as this project only applies to Fr
 # Spécification de l'ESP32-prog
 
 ![image](https://github.com/user-attachments/assets/2cc44ec6-9a4a-4b16-8d27-656a42debeec)
+
+# Dump de la liaison série
+
+Au démarrage la liaison série nous donne des informations intéressantes:
+<img width="589" alt="screen" src="https://github.com/user-attachments/assets/2745a3cb-059f-4b2f-b9c2-d23f3f28c964" />
