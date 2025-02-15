@@ -59,3 +59,7 @@ I (777) ERL_MAIN: uid=bf6cd136-2a71-4bff-9a04-0530da3bd84d
 
 La ligne ```flash_encrypt: Flash encryption mode is RELEASE``` n'est pas de bonne augure pour nous:
 Release Mode - recommended for manufacturing and production. In this mode, flashing plaintext firmware to the device without knowing the encryption key is no longer possible.
+
+Après remplacement du MCU par un neuf, et chargement d'un firmware de test (dans le dossier firmare sur ce dépôt):
+![output](https://github.com/user-attachments/assets/b4ffe1ab-67cd-443f-81a4-0401d7ea2109)
+
