@@ -4,60 +4,9 @@
 #include <string.h> // memset
 #include <ctype.h>  // isprint
 
-#define STRINGIFY(x) #x
-#define MAKE_ID_AND_LABEL(name) .id = name, .label = STRINGIFY(name)
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 #define LABEL_MAX_SIZE 8
-typedef enum
-{
-    ADSC,
-    VTIC,
-    DATE,
-    NGTF,
-    LTARF,
-    EAST,
-    EASF01,
-    EASF02,
-    EASF03,
-    EASF04,
-    EASF05,
-    EASF06,
-    EASF07,
-    EASF08,
-    EASF09,
-    EASF10,
-    EASD01,
-    EASD02,
-    EASD03,
-    EASD04,
-    IRMS1,
-    URMS1,
-    PREF,
-    PCOUP,
-    SINSTS,
-    SMAXSN,
-    SMAXSN_MINUS_1,
-    CCASN,
-    CCASN_MINUS_1,
-    UMOY1,
-    STGE,
-    DPM1,
-    FPM1,
-    DPM2,
-    FPM2,
-    DPM3,
-    FPM3,
-    MSG1,
-    MSG2,
-    PRM,
-    RELAIS,
-    NTARF,
-    NJOURF,
-    NJOURF_PLUS_1,
-    PJOURF_PLUS_1,
-    PPOINTE
-}lbl_id_t;
 
 typedef enum
 {
@@ -72,7 +21,6 @@ typedef enum
 
 typedef struct
 {
-    lbl_id_t id;
     char    *label;
     bool     timestamp;
     uint8_t  size;
@@ -83,70 +31,78 @@ typedef struct
  * only generic commands
  */
 cmd_t commands[] = {
-    { MAKE_ID_AND_LABEL(ADSC   ), .timestamp = false, .size = 12, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(VTIC   ), .timestamp = false, .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(DATE   ), .timestamp = true , .size =  0, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(NGTF   ), .timestamp = false, .size = 16, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(LTARF  ), .timestamp = false, .size = 16, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(EAST   ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF01 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF02 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF03 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF04 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF05 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF06 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF07 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF08 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF09 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASF10 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASD01 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASD02 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASD03 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(EASD04 ), .timestamp = false, .size =  9, .unit = UNIT_Wh      },
-    { MAKE_ID_AND_LABEL(IRMS1  ), .timestamp = false, .size =  3, .unit = UNIT_V       },
-    { MAKE_ID_AND_LABEL(URMS1  ), .timestamp = false, .size =  3, .unit = UNIT_V       },
-    { MAKE_ID_AND_LABEL(PREF   ), .timestamp = false, .size =  2, .unit = UNIT_kVA     },
-    { MAKE_ID_AND_LABEL(PCOUP  ), .timestamp = false, .size =  2, .unit = UNIT_kVA     },
-    { MAKE_ID_AND_LABEL(SINSTS ), .timestamp = false, .size =  5, .unit = UNIT_VA      },
-    { MAKE_ID_AND_LABEL(SINSTS ), .timestamp = false, .size =  5, .unit = UNIT_VA      },
-    { MAKE_ID_AND_LABEL(SMAXSN ), .timestamp = true , .size =  5, .unit = UNIT_VA      },
-    { SMAXSN_MINUS_1,"SMAXSN-1" , .timestamp = true , .size =  2, .unit = UNIT_VA      },
-    { MAKE_ID_AND_LABEL(CCASN  ), .timestamp = true , .size =  5, .unit = UNIT_W       },
-    { CCASN_MINUS_1, "CCASN-1"  , .timestamp = true , .size =  5, .unit = UNIT_W       },
-    { MAKE_ID_AND_LABEL(UMOY1  ), .timestamp = true , .size =  3, .unit = UNIT_V       },
-    { MAKE_ID_AND_LABEL(STGE   ), .timestamp = false, .size =  8, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(DPM1   ), .timestamp = true , .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(FPM1   ), .timestamp = true , .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(DPM2   ), .timestamp = true , .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(FPM2   ), .timestamp = true , .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(DPM3   ), .timestamp = true , .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(FPM3   ), .timestamp = true , .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(MSG1   ), .timestamp = false, .size = 32, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(MSG2   ), .timestamp = false, .size = 16, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(PRM    ), .timestamp = false, .size = 14, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(RELAIS ), .timestamp = false, .size =  3, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(NTARF  ), .timestamp = false, .size =  2, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(NJOURF ), .timestamp = false, .size =  2, .unit = UNIT_Without },
-    { NJOURF_PLUS_1, "NJOURF+1" , .timestamp = false, .size =  2, .unit = UNIT_Without },
-    { PJOURF_PLUS_1, "PJOURF+1" , .timestamp = false, .size = 98, .unit = UNIT_Without },
-    { MAKE_ID_AND_LABEL(PPOINTE), .timestamp = false, .size = 98, .unit = UNIT_Without },
+    /* label, timestamp, size, unit */
+    { "ADSC",     false, 12, UNIT_Without },
+    { "VTIC",     false,  2, UNIT_Without },
+    { "DATE",     true ,  0, UNIT_Without },
+    { "NGTF",     false, 16, UNIT_Without },
+    { "LTARF",    false, 16, UNIT_Without },
+    { "EAST",     false,  9, UNIT_Wh      },
+    { "EASF01",   false,  9, UNIT_Wh      },
+    { "EASF02",   false,  9, UNIT_Wh      },
+    { "EASF03",   false,  9, UNIT_Wh      },
+    { "EASF04",   false,  9, UNIT_Wh      },
+    { "EASF05",   false,  9, UNIT_Wh      },
+    { "EASF06",   false,  9, UNIT_Wh      },
+    { "EASF07",   false,  9, UNIT_Wh      },
+    { "EASF08",   false,  9, UNIT_Wh      },
+    { "EASF09",   false,  9, UNIT_Wh      },
+    { "EASF10",   false,  9, UNIT_Wh      },
+    { "EASD01",   false,  9, UNIT_Wh      },
+    { "EASD02",   false,  9, UNIT_Wh      },
+    { "EASD03",   false,  9, UNIT_Wh      },
+    { "EASD04",   false,  9, UNIT_Wh      },
+    { "IRMS1",    false,  3, UNIT_V       },
+    { "URMS1",    false,  3, UNIT_V       },
+    { "PREF",     false,  2, UNIT_kVA     },
+    { "PCOUP",    false,  2, UNIT_kVA     },
+    { "SINSTS",   false,  5, UNIT_VA      },
+    { "SINSTS",   false,  5, UNIT_VA      },
+    { "SMAXSN",   true ,  5, UNIT_VA      },
+    { "SMAXSN-1", true ,  2, UNIT_VA      },
+    { "CCASN",    true ,  5, UNIT_W       },
+    { "CCASN-1",  true ,  5, UNIT_W       },
+    { "UMOY1",    true ,  3, UNIT_V       },
+    { "STGE",     false,  8, UNIT_Without },
+    { "DPM1",     true ,  2, UNIT_Without },
+    { "FPM1",     true ,  2, UNIT_Without },
+    { "DPM2",     true ,  2, UNIT_Without },
+    { "FPM2",     true ,  2, UNIT_Without },
+    { "DPM3",     true ,  2, UNIT_Without },
+    { "FPM3",     true ,  2, UNIT_Without },
+    { "MSG1",     false, 32, UNIT_Without },
+    { "MSG2",     false, 16, UNIT_Without },
+    { "PRM",      false, 14, UNIT_Without },
+    { "RELAIS",   false,  3, UNIT_Without },
+    { "NTARF",    false,  2, UNIT_Without },
+    { "NJOURF",   false,  2, UNIT_Without },
+    { "NJOURF+1", false,  2, UNIT_Without },
+    { "PJOURF+1", false, 98, UNIT_Without },
+    { "PPOINTE",  false, 98, UNIT_Without },
 };
 
-void     state_init  (uint8_t c);
-void     state_label (uint8_t c);
-lbl_id_t str2label_id(uint8_t *str);
+void     state_init     (uint8_t c);
+void     state_label    (uint8_t c);
+void     state_timestamp(uint8_t c);
+void     state_data     (uint8_t c);
+
+uint8_t str2label_id(uint8_t *str);
 
 typedef enum {
     STATE_INIT,
     STATE_LABEL,
+    STATE_TIMESTAMP,
+    STATE_DATA
 } state_t;
 
 state_t  state = STATE_INIT;
-lbl_id_t current_label = -1;
+uint8_t current_label = -1;
 
 void (*state_functions[])(uint8_t) = {
     state_init,
-    state_label
+    state_label,
+    state_timestamp,
+    state_data
 };
 
 int main(int argc, char* argv[])
@@ -183,8 +139,13 @@ void state_label(uint8_t c)
     /* end of label? */
     if(c == 0x09)
     {
-        str2label_id(label_str);
-        // TODO check if label is correct.
+        current_label = str2label_id(label_str);
+        if(commands[current_label].timestamp)
+        {
+            state = STATE_TIMESTAMP;
+        } else {
+            state = STATE_DATA;
+        }
     }
 
     /* label is too long? */
@@ -207,18 +168,28 @@ void state_label(uint8_t c)
     label_str[idx++] = c;
 }
 
-lbl_id_t str2label_id(uint8_t *str)
+uint8_t str2label_id(uint8_t *str)
 {
     for(uint8_t i = 0; i < ARRAY_SIZE(commands); i++)
     {
         if(!strcmp((const char *)str, commands[i].label))
         {
             printf("found id %s\n", str);
-            return commands[i].id;
+            return i;
         }
     }
 
     /* id not found */
     printf("id not found %s\n", str);
     return -1;
+}
+
+void     state_timestamp(uint8_t c)
+{
+
+}
+
+void     state_data     (uint8_t c)
+{
+
 }
